@@ -1,38 +1,37 @@
 package HRnet.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
+import HRnet.entity.Course.Course;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import jakarta.validation.constraints.NotBlank;
-
-import jakarta.validation.constraints.Size;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Employee {
-    @Id
+    @Id 
     private Long id;
-
-    @NotBlank
-    @Size(min = 3, max = 20)
+    @Column(unique = true,nullable = false)
     private String username;
-
-    @NotBlank
-    @Size(min = 6, max = 100)
+    @Column(nullable = false)
     private String password;
-
-    @NotBlank
+    @Column(nullable = false)
     private String role;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Demande> demandes;
+    @ManyToMany
+    @JoinTable(name = "employee_courses",
+               joinColumns = @JoinColumn(name = "employee_id"),
+               inverseJoinColumns = @JoinColumn(name = "course_id"))
+    private List<Course> courses = new ArrayList<>();
 
 }

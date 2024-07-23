@@ -12,7 +12,9 @@ import java.util.List;
 public interface EmployeeService  {
     Employee saveEmployee(Employee employee);
     Employee getEmployeeByUsername(String username);
+    Employee getEmployeeById(Long employeeId);
     List<EmployeeDTO> getAllEmployee();
-    EmployeeDTO updateEmployee(EmployeeDTO employeeDTO);
+    Employee updateEmployee(Employee employee);
     void deleteEmployee(Long id);
+    public void enrollEmployeeInOptionalCourse(Long employeeId, Long courseId);
 }

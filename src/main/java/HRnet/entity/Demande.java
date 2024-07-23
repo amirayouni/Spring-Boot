@@ -15,11 +15,10 @@ public class Demande {
     private Long id;
     private String type;
     private String status;
-
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
+    @JoinTable(name = "demande_employee",
+               joinColumns = @JoinColumn(name = "demande_id"),
+               inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private Employee employee;
-
-    
-
+ 
 }

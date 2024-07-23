@@ -3,8 +3,6 @@ package HRnet.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import HRnet.dto.DemandeDTO;
-import HRnet.entity.Demande;
 import HRnet.service.DemandeService;
 
 @RestController
@@ -25,41 +22,28 @@ public class DemandeController {
     @Autowired
     private DemandeService demandeService;
 
-    @PostMapping
-    public ResponseEntity<Demande> createDemande(@RequestBody Demande demande){
-        Demande createdDemande = demandeService.saveDemande(demande);
-        return new ResponseEntity<>(createdDemande,HttpStatus.CREATED);
+    @GetMapping
+    public List<DemandeDTO> getAllDemandes() {
+        return demandeService.getAllDemandes();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Demande> getDemandeById(@PathVariable Long id){    
-        Demande demande = demandeService.getDemandeById(id);
-        return demande != null ? ResponseEntity.ok(demande) : ResponseEntity.notFound().build();
+    public DemandeDTO getDemandeById(@PathVariable Long id) {
+        return demandeService.getDemandeById(id);
     }
 
-    @GetMapping
-    public ResponseEntity<List<DemandeDTO>> getAllDemandes(){
-        List<DemandeDTO> demandes = demandeService.getAllDemandes();
-        return new ResponseEntity<>(demandes, HttpStatus.OK);
-    }
-
-    @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<DemandeDTO>> getDemandesByEmployeeId(@PathVariable Long employeeId){
-        List<DemandeDTO> demandes = demandeService.getDemandesByEmployeeId(employeeId);
-        return new ResponseEntity<>(demandes, HttpStatus.OK);
+    @PostMapping
+    public DemandeDTO createDemande(@RequestBody DemandeDTO demandeDTO) {
+        return demandeService.createDemande(demandeDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DemandeDTO> updateDemande(@RequestBody DemandeDTO demandeDTO){
-        DemandeDTO updatedDemande = demandeService.updateDemande(demandeDTO);
-        return ResponseEntity.ok(updatedDemande);
+    public DemandeDTO updateDemande(@PathVariable Long id, @RequestBody DemandeDTO demandeDTO) {
+        return demandeService.updateDemande(id, demandeDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDemande(@PathVariable Long id){
+    public void deleteDemande(@PathVariable Long id) {
         demandeService.deleteDemande(id);
-        return ResponseEntity.noContent().build();
     }
-
-
 }

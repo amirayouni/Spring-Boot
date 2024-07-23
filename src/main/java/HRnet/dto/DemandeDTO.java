@@ -11,7 +11,7 @@ public class DemandeDTO {
     private Long id;
     private String type;
     private String status;
-    private Long employeeId;
+    private EmployeeDTO employee;
 
     public Long getId() {
         return id;
@@ -29,7 +29,7 @@ public class DemandeDTO {
         this.type = type;
     }
 
-    public String getstatus() {
+    public String getStatus() {
         return status;
     }
 
@@ -37,12 +37,13 @@ public class DemandeDTO {
         this.status = status;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public EmployeeDTO getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployee(EmployeeDTO employee) {
+        this.employee = employee;
     }
+
 
 }

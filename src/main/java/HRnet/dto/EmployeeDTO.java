@@ -1,6 +1,5 @@
 package HRnet.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,9 +10,9 @@ import lombok.NoArgsConstructor;
 public class EmployeeDTO {
     private Long id;
     private String username;
-    private String password;
     private String role;
 
+    
     public Long getId() {
         return id;
     }
@@ -29,7 +28,4 @@ public class EmployeeDTO {
     public void setUsername(String username) {
         this.username = username;
     }
-
-    public String getRole() {
-        return role;
-    }
+}

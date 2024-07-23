@@ -2,9 +2,11 @@ package HRnet.service.impl;
 
 import HRnet.dto.EmployeeDTO;
 import HRnet.entity.Employee;
+import HRnet.entity.Course.Course;
+import HRnet.entity.Course.CourseStatus;
 import HRnet.repository.EmployeeRepository;
+import HRnet.repository.CourseRepository;
 import HRnet.service.EmployeeService;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -40,23 +45,50 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO) {
-        if (employeeDTO.getId() == null) {
+    public Employee getEmployeeById(Long employeeId) {
+        Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
+        if (employeeOptional.isPresent()) {
+            Employee employee = employeeOptional.get();
+            return modelMapper.map(employee, Employee.class);
+        } else {
+            return null; // or throw an exception if preferred
+        }
+    }
+
+    @Override
+    public Employee updateEmployee(Employee employee) {
+        if (employee.getId() == null) {
             throw new IllegalArgumentException("Employee ID cannot be null");
         }
-        Optional<Employee> existingEmployee = employeeRepository.findById(employeeDTO.getId());
+        Optional<Employee> existingEmployee = employeeRepository.findById(employee.getId());
         if (existingEmployee.isPresent()) {
-            Employee employeeToUpdate = modelMapper.map(employeeDTO, Employee.class);
+            Employee employeeToUpdate = modelMapper.map(employee, Employee.class);
             employeeRepository.save(employeeToUpdate);
-            return employeeDTO;
+            return employee;
         }
             else {
-                throw new RuntimeException("User not found with id: " + employeeDTO.getId());
+                throw new RuntimeException("User not found with id: " + employee.getId());
             }   
     }
     @Override
     public void deleteEmployee(Long id) {
         employeeRepository.deleteById(id);
+    }
+    @Override
+    public void enrollEmployeeInOptionalCourse(Long id, Long courseId) {
+        Employee employee = employeeRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Employee not found"));
+        Course course = courseRepository.findById(courseId)
+            .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        if (course.getStatus() == CourseStatus.OPTIONAL) {
+            if (!employee.getCourses().contains(course)) {
+                employee.getCourses().add(course);
+                employeeRepository.save(employee);
+            }
+        } else {
+            throw new RuntimeException("Course is not optional");
+        }
     }
 
 }
